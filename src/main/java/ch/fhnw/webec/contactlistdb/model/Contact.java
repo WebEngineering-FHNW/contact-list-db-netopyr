@@ -5,17 +5,35 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Contact {
 
+    @Id
+    @GeneratedValue
     private long id;
 
     private String firstName;
     private String lastName;
 
+    @ElementCollection
     private final List<String> emails = new ArrayList<>();
+
+    private String jobTitle;
+    private String company;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CONTACT_ID")
+    private final List<Phone> phones = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -45,6 +63,26 @@ public class Contact {
         return emails;
     }
 
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,6 +96,9 @@ public class Contact {
                 .append(firstName, contact.firstName)
                 .append(lastName, contact.lastName)
                 .append(emails, contact.emails)
+                .append(jobTitle, contact.jobTitle)
+                .append(company, contact.company)
+                .append(phones, contact.phones)
                 .isEquals();
     }
 
@@ -68,6 +109,9 @@ public class Contact {
                 .append(firstName)
                 .append(lastName)
                 .append(emails)
+                .append(jobTitle)
+                .append(company)
+                .append(phones)
                 .toHashCode();
     }
 
@@ -78,6 +122,9 @@ public class Contact {
                 .append("firstName", firstName)
                 .append("lastName", lastName)
                 .append("emails", emails)
+                .append("jobTitle", jobTitle)
+                .append("company", company)
+                .append("phones", phones)
                 .toString();
     }
 }
